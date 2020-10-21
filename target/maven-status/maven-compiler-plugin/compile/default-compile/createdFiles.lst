@@ -1,0 +1,6 @@
+com\optaretalk\verticle\MainVerticle.class
+com\optaretalk\Main.class
+com\optaretalk\guice\GuiceModule.class
+com\optaretalk\service\IceAndFireService.class
+com\optaretalk\handler\IceAndFireHandler.class
+com\optaretalk\routing\Routing.class

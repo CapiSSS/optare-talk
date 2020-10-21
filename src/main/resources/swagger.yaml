@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: rx-programming API
+  description: Vertx and RxJava2 API example.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+    description: Localhost server, the only one available
+paths:
+  /starwars/films/{filmId}/characters:
+    get:
+      summary: Returns the list of characters appearing in the film
+      description: List of characters appearing in the film
+      operationId: getCharactersInFilm
+      parameters:
+        - name: filmId
+          in: path
+          description: Episode ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A JSON object with title and an array of characters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CharactersInFilm'
+
+  /time/{area}/{location}:
+    get:
+      summary: Returns time in timezone (area/location)
+      description: Returns time in timezone (area/location)
+      operationId: getTimeInTimezone
+      parameters:
+        - name: area
+          in: path
+          description: Timezone area
+          example: Europe
+          required: true
+          schema:
+            type: string
+        - name: location
+          in: path
+          description: Timezone location in area
+          example: Madrid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object with the current time in the specified timezone
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  datetime:
+                    type: date-time
+                    description: Time in specified timezone
+                    example: "2020-10-21T13:43:01.019961+02:00"
+components:
+  schemas:
+    CharactersInFilm:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of film
+          example: A new hope
+        characters:
+          type: array
+          items:
+            type: string
+            description: Name of characters
+            example: Luke Skywalker
