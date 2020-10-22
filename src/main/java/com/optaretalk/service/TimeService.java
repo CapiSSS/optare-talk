@@ -19,7 +19,8 @@ public class TimeService {
 		this.httpClient = httpClient;
 	}
 
-	public Single<Time> getTime(String timezone) {
+	public Single<Time> fetchTime(String timezone) {
+		LOGGER.info("Preparing request to fetch time");
 		return httpClient.get("worldtimeapi.org", "/api", "/timezone/" + timezone)
 				.map(HttpResponse::bodyAsJsonObject)
 				.map(jsonObject -> jsonObject.mapTo(Time.class));

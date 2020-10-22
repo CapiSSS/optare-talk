@@ -23,7 +23,7 @@ public class TimeHandler {
 		String location = routingContext.pathParam("location");
 		String timezone = area + "/" + location;
 		LOGGER.info("Getting time in timezone " + timezone);
-		timeService.getTime(timezone)
+		timeService.fetchTime(timezone)
 				.subscribe(response -> routingContext.response()
 						.setStatusCode(200)
 						.putHeader("Content-Type", "application/json")
