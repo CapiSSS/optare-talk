@@ -29,36 +29,36 @@ public class StarWarsService {
 
 	public Single<Film> getNameOfCharactersAppearingInFilm(Integer episodeId) {
 		return Single.zip(
-				fetchFilm(episodeId),
-				fetchCharacters(),
-				(this::zipResponse));
+			fetchFilm(episodeId),
+			fetchCharacters(),
+			(this::zipResponse));
 	}
 
 	private Single<Film> fetchFilm(Integer episodeId) {
 		LOGGER.info("Preparing request to fetch film");
 		return httpClient.get("swapi.dev", "/api", "/films/" + episodeId + "/")
-				.map(HttpResponse::bodyAsJsonObject)
-				.map(jsonObject -> jsonObject.mapTo(Film.class));
+			.map(HttpResponse::bodyAsJsonObject)
+			.map(jsonObject -> jsonObject.mapTo(Film.class));
 	}
 
 	private Single<List<Character>> fetchCharacters() {
 		LOGGER.info("Preparing request to fetch characters");
 		return httpClient.get("swapi.dev", "/api", "/people/")
-				.map(HttpResponse::bodyAsJsonObject)
-				.map(jsonObject -> jsonObject.getJsonArray("results").stream()
-						.map(json -> ((JsonObject) json).mapTo(Character.class))
-						.collect(Collectors.toList()));
+			.map(HttpResponse::bodyAsJsonObject)
+			.map(jsonObject -> jsonObject.getJsonArray("results").stream()
+				.map(json -> ((JsonObject) json).mapTo(Character.class))
+				.collect(Collectors.toList()));
 	}
 
 	private Film zipResponse(Film film, List<Character> characterList) {
 		LOGGER.info("Zipping response...");
 		List<String> characterNameList = new ArrayList<>();
 		Map<String, String> urlToName = characterList.stream()
-				.collect(Collectors.toMap(
-						Character::getUrl,
-						Character::getName,
-						(x, y) -> x + ", " + y,
-						HashMap::new));
+			.collect(Collectors.toMap(
+				Character::getUrl,
+				Character::getName,
+				(x, y) -> x + ", " + y,
+				HashMap::new));
 		film.getCharacterList().forEach(characterUrl -> {
 			if (urlToName.containsKey(characterUrl)) {
 				characterNameList.add(urlToName.get(characterUrl));

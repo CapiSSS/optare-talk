@@ -13,12 +13,12 @@ public class StarWarsHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StarWarsHandler.class);
 	private static final Map<Integer, String> INT_TO_ROMAN_MAP = Map.of(
-			1, "I",
-			2, "II",
-			3, "III",
-			4, "IV",
-			5, "V",
-			6, "VI"
+		1, "I",
+		2, "II",
+		3, "III",
+		4, "IV",
+		5, "V",
+		6, "VI"
 	);
 
 	StarWarsService starWarsService;
@@ -32,10 +32,14 @@ public class StarWarsHandler {
 		Integer episodeId = Integer.parseInt(routingContext.pathParam("filmId"));
 		LOGGER.info("Getting characters appearing in episode " + INT_TO_ROMAN_MAP.get(episodeId));
 		starWarsService.getNameOfCharactersAppearingInFilm(episodeId)
-				.subscribe(response -> routingContext.response()
+			.subscribe(response -> {
+					routingContext.response()
 						.setStatusCode(200)
 						.putHeader("Content-Type", "application/json")
-						.end(Json.encodePrettily(response)), throwable -> {
+						.end(Json.encodePrettily(response));
+					LOGGER.info("HTTP response returned.");
+				},
+				throwable -> {
 					throwable.printStackTrace();
 					routingContext.fail(throwable);
 				});

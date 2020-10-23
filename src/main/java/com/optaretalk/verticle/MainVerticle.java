@@ -23,21 +23,21 @@ public class MainVerticle extends AbstractVerticle {
 	public void start(Promise<Void> startPromise) {
 		Guice.createInjector(new GuiceModule(vertx)).injectMembers(this);
 		router.getRouter(vertx)
-				.subscribe(router -> startHttpServer("localhost", 8080, router, startPromise));
+			.subscribe(router -> startHttpServer("localhost", 8080, router, startPromise));
 	}
 
-	private void startHttpServer(String httpHost, Integer httpPort, Router router, Promise started) {
+	private void startHttpServer(String httpHost, Integer httpPort, Router router, Promise<Void> started) {
 		vertx.createHttpServer()
-				.requestHandler(router)
-				.rxListen(httpPort, httpHost)
-				.subscribe(httpServer -> {
-					LOGGER.info("HTTP server started on http://{0}:{1}",
-							httpHost, httpPort.toString());
-					started.complete();
-				}, error -> {
-					LOGGER.error(error);
-					started.fail(error);
-				});
+			.requestHandler(router)
+			.rxListen(httpPort, httpHost)
+			.subscribe(httpServer -> {
+				LOGGER.info("HTTP server started on http://{0}:{1}",
+					httpHost, httpPort.toString());
+				started.complete();
+			}, error -> {
+				LOGGER.error(error);
+				started.fail(error);
+			});
 		initJsonModules();
 	}
 

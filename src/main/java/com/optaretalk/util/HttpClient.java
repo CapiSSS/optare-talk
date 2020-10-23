@@ -26,7 +26,7 @@ public class HttpClient {
 	public Single<HttpResponse<Buffer>> get(String host, String servicePath, String path) {
 		LOGGER.info("Sending request to http://" + host + servicePath + path);
 		webClient.get(host, servicePath);
-		return webClient.get(host, servicePath + path).rxSend().retry(2)
-				.doOnSuccess(response -> LOGGER.info("Received response with status code: " + response.statusCode()));
+		return webClient.get(host, servicePath + path).rxSend()
+			.doOnSuccess(response -> LOGGER.info("Received response with status code: " + response.statusCode()));
 	}
 }

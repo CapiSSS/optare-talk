@@ -24,10 +24,11 @@ public class TimeHandler {
 		String timezone = area + "/" + location;
 		LOGGER.info("Getting time in timezone " + timezone);
 		timeService.fetchTime(timezone)
-				.subscribe(response -> routingContext.response()
-						.setStatusCode(200)
-						.putHeader("Content-Type", "application/json")
-						.end(Json.encodePrettily(response)), throwable -> {
+			.subscribe(response -> routingContext.response()
+					.setStatusCode(200)
+					.putHeader("Content-Type", "application/json")
+					.end(Json.encodePrettily(response)),
+				throwable -> {
 					throwable.printStackTrace();
 					routingContext.fail(throwable);
 				});

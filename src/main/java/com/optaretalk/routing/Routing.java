@@ -26,22 +26,22 @@ public class Routing {
 
 	public Single<Router> getRouter(Vertx vertx) {
 		return Single.create(singleEmitter -> {
-			LOGGER.info("Reading OpenApi definition from swagger to configure the HTTP server.");
+			LOGGER.info("Creating router from OpenApi3 swagger file...");
 			getRouterFromOpenApi3(vertx).subscribe(singleEmitter::onSuccess, singleEmitter::onError);
 		});
 	}
 
 	private Single<Router> getRouterFromOpenApi3(Vertx vertx) {
 		return OpenAPI3RouterFactory.rxCreate(vertx, "swagger.yaml")
-				.map(openAPI3RouterFactory -> {
-					openAPI3RouterFactory.addGlobalHandler(ResponseTimeHandler.create());
-					openAPI3RouterFactory.addHandlerByOperationId("getCharactersInFilm",
-							starWarsHandler::getCharactersInFilm);
-					openAPI3RouterFactory.addHandlerByOperationId("getTimeInTimezone", timeHandler::getTime);
-					Router router = openAPI3RouterFactory.getRouter();
-					LOGGER.info("Router created.");
-					return router;
-				});
+			.map(openAPI3RouterFactory -> {
+				openAPI3RouterFactory.addGlobalHandler(ResponseTimeHandler.create());
+				openAPI3RouterFactory.addHandlerByOperationId("getCharactersInFilm",
+					starWarsHandler::getCharactersInFilm);
+				openAPI3RouterFactory.addHandlerByOperationId("getTimeInTimezone", timeHandler::getTime);
+				Router router = openAPI3RouterFactory.getRouter();
+				LOGGER.info("Router created.");
+				return router;
+			});
 	}
 
 }
