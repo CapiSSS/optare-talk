@@ -7,6 +7,23 @@ servers:
   - url: http://localhost:8080/v1
     description: Localhost server, the only one available
 paths:
+  /task/slow:
+    get:
+      summary: Performs a long running task asynchronously
+      description: Performs a long running task asynchronously, retrieving a quick response and dispatching the work to a worker
+      operationId: longRunningTask
+      parameters:
+        - name: seconds
+          in: query
+          description: Number of seconds that must take the service to run the task
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Quick response of the service
+
   /starwars/films/{filmId}/characters:
     get:
       summary: Returns the list of characters appearing in the film

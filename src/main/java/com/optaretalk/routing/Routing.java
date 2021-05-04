@@ -1,6 +1,7 @@
 package com.optaretalk.routing;
 
 import com.google.inject.Inject;
+import com.optaretalk.handler.LongRunningTaskHandler;
 import com.optaretalk.handler.StarWarsHandler;
 import com.optaretalk.handler.TimeHandler;
 import io.reactivex.Single;
@@ -17,11 +18,15 @@ public class Routing {
 
 	private final StarWarsHandler starWarsHandler;
 	private final TimeHandler timeHandler;
+	private final LongRunningTaskHandler longRunningTaskHandler;
 
 	@Inject
-	public Routing(StarWarsHandler starWarsHandler, TimeHandler timeHandler) {
+	public Routing(StarWarsHandler starWarsHandler,
+				   TimeHandler timeHandler,
+				   LongRunningTaskHandler longRunningTaskHandler) {
 		this.starWarsHandler = starWarsHandler;
 		this.timeHandler = timeHandler;
+		this.longRunningTaskHandler = longRunningTaskHandler;
 	}
 
 	public Single<Router> getRouter(Vertx vertx) {
@@ -38,6 +43,8 @@ public class Routing {
 				openAPI3RouterFactory.addHandlerByOperationId("getCharactersInFilm",
 					starWarsHandler::getCharactersInFilm);
 				openAPI3RouterFactory.addHandlerByOperationId("getTimeInTimezone", timeHandler::getTime);
+				openAPI3RouterFactory.addHandlerByOperationId("longRunningTask",
+					longRunningTaskHandler::performLongRunningTask);
 				Router router = openAPI3RouterFactory.getRouter();
 				LOGGER.info("Router created.");
 				return router;

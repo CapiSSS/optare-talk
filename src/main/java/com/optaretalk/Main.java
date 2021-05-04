@@ -14,6 +14,8 @@ public class Main {
 
 		VertxOptions vertxOptions = new VertxOptions();
 		vertxOptions.setEventLoopPoolSize(10);
+		vertxOptions.setWorkerPoolSize(100);
+		vertxOptions.setInternalBlockingPoolSize(10);
 
 		Consumer<Vertx> runner = (vertx) -> vertx.deployVerticle(MainVerticle.class.getName());
 		runner.accept(Vertx.vertx(vertxOptions));
